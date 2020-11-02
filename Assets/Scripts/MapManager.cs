@@ -10,10 +10,12 @@ public class MapManager : MonoBehaviour {
 
     void Start() {
 		var map = Deserialize<Map>(xmlMap.text);
-		Debug.Log(map);
-    }
+		var mapLayer = new MapLayer(map.Layer.Name, map.Layer.Width, map.Layer.Height, map.Layer.Data.Text);
+		var mapObjectGroup = new MapObjectGroup(map.Objectgroup.Name, map.Objectgroup.Object);
+		
+	}
 
-	public static T Deserialize<T>(string xmlString) {
+	static T Deserialize<T>(string xmlString) {
 		XmlSerializer serializer = new XmlSerializer(typeof(T));
 		MemoryStream xmlStream = new MemoryStream(Encoding.UTF8.GetBytes(xmlString));
 		return (T)serializer.Deserialize(xmlStream);
