@@ -6,7 +6,7 @@ public class Pathfinder {
 	List<List<GraphNode>> pathfindingGrid;
 	private SimplePathfinding pathfinder;
 	
-	Pathfinder() {
+	public Pathfinder() {
 		pathfinder = new SimplePathfinding();
 	}
 

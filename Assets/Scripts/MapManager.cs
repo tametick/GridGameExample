@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using Pathfinding;
+using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Xml.Serialization;
 using UnityEngine;
@@ -13,6 +15,9 @@ public class MapManager : MonoBehaviour {
 	public GameObject treesPrefab;
 	public GameObject rocksPrefab;
 
+	Pathfinder pathfinder;
+	IntVector2 selectedTile;
+
 	void Start() {
 		var map = Deserialize<Map>(xmlMap.text);
 		var mapLayer = new MapLayer(map.Layer.Name, map.Layer.Width, map.Layer.Height, map.Layer.Data.Text);
@@ -26,9 +31,34 @@ public class MapManager : MonoBehaviour {
 				var tile = newTile.AddComponent<Tile>();
 				tile.x = x;
 				tile.y = y;
+				tile.OnClickTile = ClickTile;
 			}
 		}
 
+		pathfinder = new Pathfinder();
+		pathfinder.Init(mapLayer.data, new List<int>() { (int)TileType.Grass }, HasWall, BlockedByOthers);
+	}
+
+	private void ClickTile(int x, int y) {
+		
+		if (selectedTile == null) {
+			Debug.Log($"start from {x},{y}");
+			selectedTile = new IntVector2(x, y);
+		} else {
+			var result = pathfinder.Search(selectedTile, new IntVector2(x, y));
+			Debug.Log($"end at {x},{y}");
+			foreach(GraphNode n in result) {
+				Debug.Log($"{n.x},{n.y}");
+			}
+		}
+	}
+
+	private bool HasWall(int x, int y, Direction d) {
+		return false;
+	}
+
+	private bool BlockedByOthers(int x, int y) {
+		return false;
 	}
 
 	private GameObject GetPrefab(TileType tileType) {
