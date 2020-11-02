@@ -23,6 +23,9 @@ public class MapManager : MonoBehaviour {
 				var newTile = Instantiate(GetPrefab(mapLayer.GetTile(x,y)), transform);
 				newTile.transform.localPosition = new Vector3(x, 0, -y);
 				newTile.name = $"{x},{y}";
+				var tile = newTile.AddComponent<Tile>();
+				tile.x = x;
+				tile.y = y;
 			}
 		}
 
