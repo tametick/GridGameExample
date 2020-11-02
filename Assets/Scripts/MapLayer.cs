@@ -9,8 +9,8 @@ internal enum TileType {
 
 internal class MapLayer {
 	private string name;
-	private int width;
-	private int height;
+	internal int width { get; private set; }
+	internal int height { get; private set; }
 	private TileType[,] data;
 
 	internal MapLayer(string name, string width, string height, string dataAsString) {
@@ -29,5 +29,9 @@ internal class MapLayer {
 				}
 			}
 		}
+	}
+
+	internal TileType GetTile(int x, int y) {
+		return data[x, y];
 	}
 }
