@@ -26,7 +26,7 @@ class MapObject {
 
 internal class MapObjectGroup {
 	private string name;
-	private List<MapObject> objects;
+	internal List<MapObject> objects { get; private set; }
 
 	internal MapObjectGroup(string name, List<Xml2CSharp.Object> objects) {
 		this.name = name;

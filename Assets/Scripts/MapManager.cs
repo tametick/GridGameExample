@@ -15,6 +15,9 @@ public class MapManager : MonoBehaviour {
 	public GameObject treesPrefab;
 	public GameObject rocksPrefab;
 
+	public GameObject playerPrefab;
+	public GameObject enemyPrefab;
+
 	Pathfinder pathfinder;
 	IntVector2 selectedTile;
 
@@ -37,6 +40,22 @@ public class MapManager : MonoBehaviour {
 
 		pathfinder = new Pathfinder();
 		pathfinder.Init(mapLayer.data, new List<int>() { (int)TileType.Grass }, HasWall, BlockedByOthers);
+
+		foreach(var obj in mapObjectGroup.objects) {
+			GameObject newObject= Instantiate(GetObjectPrefab(obj.type), transform);
+			newObject.transform.localPosition = new Vector3(obj.x, 0, -obj.y +1);
+		}
+	}
+
+	private GameObject GetObjectPrefab(ObjectType type) {
+		switch (type) {
+			case ObjectType.Player:
+				return playerPrefab;
+			case ObjectType.Enemy:
+				return enemyPrefab;
+			default:
+				return null;
+		}
 	}
 
 	private void ClickTile(int x, int y) {

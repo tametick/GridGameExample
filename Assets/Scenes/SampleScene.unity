@@ -263,6 +263,8 @@ MonoBehaviour:
   mountainPrefab: {fileID: 7624059166051896317, guid: 7ae99a0a904d49645a141636abe13d74, type: 3}
   treesPrefab: {fileID: 7587453649237982193, guid: 950e667bfb3d9424abe044d73aa58f25, type: 3}
   rocksPrefab: {fileID: 3014106154525380080, guid: dc082c0f43d37e04b9b7455a8cdf3051, type: 3}
+  playerPrefab: {fileID: 7674611445986950002, guid: b50930ced2d070e4dbddefb5a74069fe, type: 3}
+  enemyPrefab: {fileID: 4570649637367972309, guid: 0ec8e1320ed1a244b945c9d0e65cbed3, type: 3}
 --- !u!1001 &8067943155918753468
 PrefabInstance:
   m_ObjectHideFlags: 0
