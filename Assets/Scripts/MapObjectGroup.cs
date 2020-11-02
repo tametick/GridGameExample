@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-enum ObjectType {
+internal enum ObjectType {
 	Player=5,
 	Enemy
 }
