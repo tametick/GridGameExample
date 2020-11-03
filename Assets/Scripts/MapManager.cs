@@ -20,7 +20,8 @@ public class MapManager : MonoBehaviour {
 	public GameObject enemyPrefab;
 
 	Pathfinder pathfinder;
-	IntVector2? selectedTile;
+	Actor selectedActor;
+
 
 	void Start() {
 		var map = Deserialize<Map>(xmlMap.text);
@@ -30,11 +31,11 @@ public class MapManager : MonoBehaviour {
 		for(var y=0; y<mapLayer.height; y++) {
 			for (var x = 0; x < mapLayer.width; x++) {
 				var newTile = Instantiate(GetPrefab(mapLayer.GetTile(x,y)), transform);
-				newTile.transform.localPosition = new IntVector2(x,y).GridToWorld();
+				IntVector2 gridPosition = new IntVector2(x, y);
+				newTile.transform.localPosition = gridPosition.GridToWorld();
 				newTile.name = $"{x},{y}";
 				var tile = newTile.AddComponent<Tile>();
-				tile.x = x;
-				tile.y = y;
+				tile.gridPosition = gridPosition;
 				tile.OnClickTile = ClickTile;
 			}
 		}
@@ -42,9 +43,13 @@ public class MapManager : MonoBehaviour {
 		pathfinder = new Pathfinder();
 		pathfinder.Init(mapLayer.data, new List<int>() { (int)TileType.Grass }, HasWall, BlockedByOthers);
 
+		// player & enemy actors
 		foreach(var obj in mapObjectGroup.objects) {
 			GameObject newObject= Instantiate(GetObjectPrefab(obj.type), transform);
 			newObject.transform.localPosition =obj.gridPosition.GridToWorld();
+			var actor = newObject.AddComponent<Actor>();
+			actor.data = obj;
+			actor.OnClickActor = ClickActor;
 		}
 	}
 
@@ -59,17 +64,26 @@ public class MapManager : MonoBehaviour {
 		}
 	}
 
+	private void ClickActor(Actor actor) {
+		Debug.Log($"click actor {actor.name} at {actor.gridPosition}");
+
+		// set new player character selection
+		if (actor.isPlayer) {
+			selectedActor = actor;
+		} else if (selectedActor != null) {
+			// todo: attack
+			Debug.Log($"{selectedActor.name} attack {actor.name}");
+		}
+	}
+
 	private void ClickTile(IntVector2 gridPosition) {
-		
-		if (selectedTile == null) {
-			Debug.Log($"start from {gridPosition.x},{gridPosition.y}");
-			selectedTile = gridPosition;
-		} else {
-			var result = pathfinder.Search((IntVector2)selectedTile, gridPosition);
+		if (selectedActor != null) {
+			var result = pathfinder.Search(selectedActor.gridPosition, gridPosition);
 			Debug.Log($"end at {gridPosition.x},{gridPosition.y}");
 			foreach(GraphNode n in result) {
 				Debug.Log($"{n.x},{n.y}");
 			}
+			selectedActor = null;
 		}
 	}
 

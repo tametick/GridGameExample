@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Tile : MonoBehaviour {
-	internal int x;
-	internal int y;
+	internal IntVector2 gridPosition;
 	internal Action<IntVector2> OnClickTile;
 
 	private void OnMouseUp() {
-		OnClickTile(new IntVector2(x,y));
+		OnClickTile(gridPosition);
 	}
 }
