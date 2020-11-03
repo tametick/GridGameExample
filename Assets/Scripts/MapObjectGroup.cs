@@ -36,7 +36,7 @@ internal class MapObjectGroup {
 			var h = int.Parse(o.Height);
 
 			MapObject mapObject = new MapObject(
-				int.Parse(o.Id), (ObjectType)int.Parse(o.Gid), int.Parse(o.X) / w, int.Parse(o.Y) / h);
+				int.Parse(o.Id), (ObjectType)int.Parse(o.Gid), int.Parse(o.X) / w, int.Parse(o.Y) / h - 1);
 			this.objects.Add(mapObject);
 		}
 	}

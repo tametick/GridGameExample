@@ -43,7 +43,7 @@ public class MapManager : MonoBehaviour {
 
 		foreach(var obj in mapObjectGroup.objects) {
 			GameObject newObject= Instantiate(GetObjectPrefab(obj.type), transform);
-			newObject.transform.localPosition = new Vector3(obj.x, 0, -obj.y +1);
+			newObject.transform.localPosition = new Vector3(obj.x, 0, -obj.y);
 		}
 	}
 
