@@ -9,18 +9,16 @@ internal enum ObjectType {
 class MapObject {
 	internal int id;
 	internal ObjectType type;
-	internal int x;
-	internal int y;
+	internal IntVector2 gridPosition;
 
 	internal MapObject(int id, ObjectType type, int x, int y) {
 		this.id = id;
 		this.type = type;
-		this.x = x;
-		this.y = y;
+		this.gridPosition = new IntVector2(x, y);
 	}
 
 	public override string ToString() {
-		return $"MapObject {id}: {type} <{x},{y}>";
+		return $"MapObject {id}: {type} <{gridPosition.x},{gridPosition.y}>";
 	}
 }
 

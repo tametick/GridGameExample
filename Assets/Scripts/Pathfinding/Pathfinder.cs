@@ -9,8 +9,7 @@ public class Pathfinder {
 	public Pathfinder() {
 		pathfinder = new SimplePathfinding();
 	}
-
-	List<List<GraphNodeType>> ListFromArray (int[,] tiles, List<int> open)	{
+	private List<List<GraphNodeType>> ListFromArray (int[,] tiles, List<int> open)	{
 		var graphInputGrid = new List<List<GraphNodeType>> ();
 		for (int x = 0; x < tiles.GetLength(0); ++x) {
 			graphInputGrid.Add (new List<GraphNodeType> ());
@@ -36,11 +35,11 @@ public class Pathfinder {
 		pathfindingGrid = graph.nodes;
 	}
 	
-	public GraphNode GetNode(int x, int y){
-		return pathfindingGrid[x][y];
+	private GraphNode GetNode(IntVector2 gridPosition) {
+		return pathfindingGrid[gridPosition.x][gridPosition.y];
 	}
 	
 	public List<GraphNode> Search(IntVector2 start, IntVector2 end,bool avoidOthers=false) {
-		return pathfinder.Search(pathfindingGrid, GetNode(start.x,start.y), GetNode(end.x,end.y), false, null, avoidOthers);
+		return pathfinder.Search(pathfindingGrid, GetNode(start), GetNode(end), false, null, avoidOthers);
 	}
 }

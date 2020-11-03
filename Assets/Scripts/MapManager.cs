@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml.Serialization;
 using UnityEngine;
 using Xml2CSharp;
+using ExtensionMethods;
 
 public class MapManager : MonoBehaviour {
 
@@ -29,7 +30,7 @@ public class MapManager : MonoBehaviour {
 		for(var y=0; y<mapLayer.height; y++) {
 			for (var x = 0; x < mapLayer.width; x++) {
 				var newTile = Instantiate(GetPrefab(mapLayer.GetTile(x,y)), transform);
-				newTile.transform.localPosition = new Vector3(x, 0, -y);
+				newTile.transform.localPosition = new IntVector2(x,y).GridToWorld();
 				newTile.name = $"{x},{y}";
 				var tile = newTile.AddComponent<Tile>();
 				tile.x = x;
@@ -43,7 +44,7 @@ public class MapManager : MonoBehaviour {
 
 		foreach(var obj in mapObjectGroup.objects) {
 			GameObject newObject= Instantiate(GetObjectPrefab(obj.type), transform);
-			newObject.transform.localPosition = new Vector3(obj.x, 0, -obj.y);
+			newObject.transform.localPosition =obj.gridPosition.GridToWorld();
 		}
 	}
 
@@ -58,14 +59,14 @@ public class MapManager : MonoBehaviour {
 		}
 	}
 
-	private void ClickTile(int x, int y) {
+	private void ClickTile(IntVector2 gridPosition) {
 		
 		if (selectedTile == null) {
-			Debug.Log($"start from {x},{y}");
-			selectedTile = new IntVector2(x, y);
+			Debug.Log($"start from {gridPosition.x},{gridPosition.y}");
+			selectedTile = gridPosition;
 		} else {
-			var result = pathfinder.Search((IntVector2)selectedTile, new IntVector2(x, y));
-			Debug.Log($"end at {x},{y}");
+			var result = pathfinder.Search((IntVector2)selectedTile, gridPosition);
+			Debug.Log($"end at {gridPosition.x},{gridPosition.y}");
 			foreach(GraphNode n in result) {
 				Debug.Log($"{n.x},{n.y}");
 			}

@@ -6,9 +6,9 @@ using UnityEngine;
 public class Tile : MonoBehaviour {
 	internal int x;
 	internal int y;
-	internal Action<int, int> OnClickTile;
+	internal Action<IntVector2> OnClickTile;
 
 	private void OnMouseUp() {
-		OnClickTile(x,y);
+		OnClickTile(new IntVector2(x,y));
 	}
 }
