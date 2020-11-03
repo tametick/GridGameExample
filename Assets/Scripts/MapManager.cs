@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using UnityEngine;
 using Xml2CSharp;
 using ExtensionMethods;
+using DG.Tweening;
 
 public class MapManager : MonoBehaviour {
 
@@ -26,6 +27,8 @@ public class MapManager : MonoBehaviour {
 	Actor selectedActor;
 
 	void Start() {
+		DOTween.Init();
+
 		var map = Deserialize<Map>(xmlMap.text);
 		var mapLayer = new MapLayer(map.Layer.Name, map.Layer.Width, map.Layer.Height, map.Layer.Data.Text);
 		var mapObjectGroup = new MapObjectGroup(map.Objectgroup.Name, map.Objectgroup.Object);
@@ -135,7 +138,10 @@ public class MapManager : MonoBehaviour {
 				}
 				pathIndicator[step].transform.localEulerAngles = stepIndicatorPrefab.transform.localEulerAngles + new Vector3(0, 0, zRot);
 			}
-			
+
+			if (result.Count > 0) {
+				selectedActor.WalkPath(pathIndicator);
+			}
 			selectedActor = null;
 		}
 	}
