@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using ExtensionMethods;
 
 public class Actor : MonoBehaviour {
     internal MapObject data;
@@ -39,6 +40,10 @@ public class Actor : MonoBehaviour {
                 stepIndictaor.transform.localPosition.z
             );
             walkSequence.Append(transform.DOLocalMove(destination, 0.25f));
+            walkSequence.AppendCallback(() => { 
+                stepIndictaor.SetActive(false);
+                gridPosition = destination.WorldToGrid();
+            });
         }
         walkSequence.AppendCallback(()=>onComplete());
     }
