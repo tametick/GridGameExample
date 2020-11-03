@@ -1,5 +1,4 @@
-﻿using Pathfinding;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml.Serialization;
@@ -27,6 +26,8 @@ public class MapManager : MonoBehaviour {
 	Actor selectedActor;
 	private bool ignoreInput;
 
+	List<Actor> actors;
+
 	void Start() {
 		DOTween.Init();
 
@@ -51,10 +52,12 @@ public class MapManager : MonoBehaviour {
 		pathIndicator = new List<GameObject>();
 
 		// player & enemy actors
-		foreach(var obj in mapObjectGroup.objects) {
+		actors = new List<Actor>();
+		foreach (var obj in mapObjectGroup.objects) {
 			GameObject newObject= Instantiate(GetObjectPrefab(obj.type), transform);
 			newObject.transform.localPosition =obj.gridPosition.GridToWorld();
 			var actor = newObject.AddComponent<Actor>();
+			actors.Add(actor);
 			actor.data = obj;
 			actor.OnClickActor = ClickActor;
 		}
@@ -91,7 +94,7 @@ public class MapManager : MonoBehaviour {
 			return;
 
 		if (selectedActor != null) {
-			var result = pathfinder.Search(selectedActor.gridPosition, gridPosition);
+			var result = pathfinder.Search(selectedActor.gridPosition, gridPosition, true);
 			Debug.Log($"walk to {gridPosition.x},{gridPosition.y}");
 			if (result == null)
 				return;
@@ -159,6 +162,10 @@ public class MapManager : MonoBehaviour {
 	}
 
 	private bool BlockedByOthers(int x, int y) {
+		foreach (var actor in actors) {
+			if (actor.gridPosition.x == x && actor.gridPosition.y == y)
+				return true;
+		}
 		return false;
 	}
 
