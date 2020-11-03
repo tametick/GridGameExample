@@ -19,9 +19,11 @@ public class MapManager : MonoBehaviour {
 	public GameObject playerPrefab;
 	public GameObject enemyPrefab;
 
+	public GameObject stepIndicatorPrefab;
+	List<GameObject> pathIndicator;
+
 	Pathfinder pathfinder;
 	Actor selectedActor;
-
 
 	void Start() {
 		var map = Deserialize<Map>(xmlMap.text);
@@ -42,6 +44,7 @@ public class MapManager : MonoBehaviour {
 
 		pathfinder = new Pathfinder();
 		pathfinder.Init(mapLayer.data, new List<int>() { (int)TileType.Grass }, HasWall, BlockedByOthers);
+		pathIndicator = new List<GameObject>();
 
 		// player & enemy actors
 		foreach(var obj in mapObjectGroup.objects) {
@@ -79,10 +82,27 @@ public class MapManager : MonoBehaviour {
 	private void ClickTile(IntVector2 gridPosition) {
 		if (selectedActor != null) {
 			var result = pathfinder.Search(selectedActor.gridPosition, gridPosition);
-			Debug.Log($"end at {gridPosition.x},{gridPosition.y}");
-			foreach(GraphNode n in result) {
-				Debug.Log($"{n.x},{n.y}");
+			Debug.Log($"walk to {gridPosition.x},{gridPosition.y}");
+			if (result == null)
+				return;
+			
+			// make sure we have enough step indicators
+			while (result.Count > pathIndicator.Count) {
+				pathIndicator.Add(Instantiate(stepIndicatorPrefab,transform));
 			}
+
+			// disable old path
+			foreach (var indicator in pathIndicator) {
+				indicator.SetActive(false);
+			}
+
+			// set & show new path
+			for (int step = 0; step < result.Count; step++) {
+				var gridPos = new IntVector2(result[step].x, result[step].y);
+				pathIndicator[step].SetActive(true);
+				pathIndicator[step].transform.localPosition= gridPos.GridToWorld()+stepIndicatorPrefab.transform.localPosition;
+			}
+			
 			selectedActor = null;
 		}
 	}
