@@ -19,7 +19,7 @@ public class MapManager : MonoBehaviour {
 	public GameObject enemyPrefab;
 
 	Pathfinder pathfinder;
-	IntVector2 selectedTile;
+	IntVector2? selectedTile;
 
 	void Start() {
 		var map = Deserialize<Map>(xmlMap.text);
@@ -64,7 +64,7 @@ public class MapManager : MonoBehaviour {
 			Debug.Log($"start from {x},{y}");
 			selectedTile = new IntVector2(x, y);
 		} else {
-			var result = pathfinder.Search(selectedTile, new IntVector2(x, y));
+			var result = pathfinder.Search((IntVector2)selectedTile, new IntVector2(x, y));
 			Debug.Log($"end at {x},{y}");
 			foreach(GraphNode n in result) {
 				Debug.Log($"{n.x},{n.y}");

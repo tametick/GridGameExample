@@ -1,11 +1,8 @@
 ﻿using UnityEngine;
 
-public class IntVector2  {
+public struct IntVector2  {
 	public int x;
 	public int y;
-
-	public IntVector2(){
-	}
 
 	public IntVector2(Vector2 vect){
 		this.x = (int)vect.x;
