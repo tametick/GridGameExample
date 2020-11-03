@@ -26,9 +26,13 @@ public class Actor : MonoBehaviour {
         OnClickActor(this);
     }
 
-	internal void WalkPath(List<GameObject> pathIndicator) {
+	internal void WalkPath(List<GameObject> pathIndicator, Action onComplete) {
         Sequence walkSequence = DOTween.Sequence();
         foreach(var stepIndictaor in pathIndicator) {
+            // dont walk hidden (=old) steps
+            if (!stepIndictaor.activeSelf)
+                break;
+
             var destination = new Vector3(
                 stepIndictaor.transform.localPosition.x,
                 transform.localPosition.y,
@@ -36,5 +40,6 @@ public class Actor : MonoBehaviour {
             );
             walkSequence.Append(transform.DOLocalMove(destination, 0.25f));
         }
+        walkSequence.AppendCallback(()=>onComplete());
     }
 }

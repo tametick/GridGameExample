@@ -25,6 +25,7 @@ public class MapManager : MonoBehaviour {
 
 	Pathfinder pathfinder;
 	Actor selectedActor;
+	private bool ignoreInput;
 
 	void Start() {
 		DOTween.Init();
@@ -71,6 +72,9 @@ public class MapManager : MonoBehaviour {
 	}
 
 	private void ClickActor(Actor actor) {
+		if (ignoreInput)
+			return;
+
 		Debug.Log($"click actor {actor.name} at {actor.gridPosition}");
 
 		// set new player character selection
@@ -83,6 +87,9 @@ public class MapManager : MonoBehaviour {
 	}
 
 	private void ClickTile(IntVector2 gridPosition) {
+		if (ignoreInput)
+			return;
+
 		if (selectedActor != null) {
 			var result = pathfinder.Search(selectedActor.gridPosition, gridPosition);
 			Debug.Log($"walk to {gridPosition.x},{gridPosition.y}");
@@ -140,7 +147,8 @@ public class MapManager : MonoBehaviour {
 			}
 
 			if (result.Count > 0) {
-				selectedActor.WalkPath(pathIndicator);
+				ignoreInput = true;
+				selectedActor.WalkPath(pathIndicator, ()=> { ignoreInput = false; });
 			}
 			selectedActor = null;
 		}
