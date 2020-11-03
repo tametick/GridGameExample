@@ -51,7 +51,14 @@ public struct IntVector2  {
 	public bool Equals (int ox, int oy) {
 		return x==ox && y==oy;
 	}
-	
+
+	public static IntVector2 operator -(IntVector2 a) => new IntVector2(-a.x, -a.y);
+	public static IntVector2 operator +(IntVector2 a, IntVector2 b)
+		=> new IntVector2(a.x+ b.x,a.y+b.y);
+	public static IntVector2 operator -(IntVector2 a, IntVector2 b)
+		=> a + (-b);
+
+
 	public Direction ToDirection(){
 		var absX = Mathf.Abs (x);
 		var absY = Mathf.Abs (y);

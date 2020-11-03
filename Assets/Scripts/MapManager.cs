@@ -101,6 +101,39 @@ public class MapManager : MonoBehaviour {
 				var gridPos = new IntVector2(result[step].x, result[step].y);
 				pathIndicator[step].SetActive(true);
 				pathIndicator[step].transform.localPosition= gridPos.GridToWorld()+stepIndicatorPrefab.transform.localPosition;
+
+				IntVector2 before, after;
+
+				// rotate relative to next step
+				if(step<result.Count-1) {
+					before = new IntVector2(result[step].x, result[step].y);
+					after = new IntVector2(result[step+1].x, result[step+1].y);
+				} else if (step>0) {
+					before = new IntVector2(result[step-1].x, result[step-1].y);
+					after = new IntVector2(result[step].x, result[step].y);
+				} else {
+					// rotate relative to origin
+					before = selectedActor.gridPosition;
+					after = new IntVector2(result[step].x, result[step].y);
+				}
+
+				int zRot = 0;
+				IntVector2 delta = (after - before);
+				switch (delta.ToDirection()) {
+					case Direction.Up:
+						zRot = 180;
+						break;
+					case Direction.Down:
+						zRot=0;
+						break;
+					case Direction.Right:
+						zRot = 270;
+						break;
+					case Direction.Left:
+						zRot = 90;
+						break;
+				}
+				pathIndicator[step].transform.localEulerAngles = stepIndicatorPrefab.transform.localEulerAngles + new Vector3(0, 0, zRot);
 			}
 			
 			selectedActor = null;
